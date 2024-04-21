@@ -1,0 +1,45 @@
+<div class="container text-center">
+  <div class="row align-items-start">
+    <div class="col">
+      <h1>Быки и коровы</h1>
+    </div>
+</div>
+  </div>
+<div class="container text-center">
+  <div class="row align-items-start">
+    <div class="col">
+      <h1>Меню</h1>
+    </div>
+</div>
+  </div>
+<ul class="nav justify-content-center">
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'rules' %}"><h3>Правила</h3></a>
+  </li>
+  </ul>
+<ul class="nav justify-content-center">
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'profile' %}"><h3>Профиль</h3></a>
+  </li>
+</ul>
+<ul class="nav justify-content-center">
+  {%if request.user.is_authenticated%}
+  {%if abcd == 0%}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'game' %}"><h3>Начать игру</h3></a>
+  </li>
+  {%else%}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'game' %}"><h3>Продолжить игру</h3></a>
+  </li>
+  {%endif%}
+  {%else%}
+  <div class="container text-center">
+  <div class="row align-items-start">
+    <div class="col">
+      <h2>Внимание! Пожалуйста, зарегистрируйтесь, чтобы получить возможность играть.</h2>
+    </div>
+</div>
+  </div>
+  {%endif%}
+</ul>

@@ -1,0 +1,43 @@
+body{
+background-image: url(456.jpg)
+}
+
+
+h1 {
+    color: Green;
+}
+h3 {
+    color: Green;
+    font-size: 3rem;
+}
+
+h7 {
+    color: blue;
+    font-size: 1.5rem;
+    font-weight: 1000;
+}
+
+h4 {
+    color: Green;
+    font-size: 2rem;
+}
+
+h6 {
+    color: Green;
+    font-size: 2rem;
+}
+
+
+label {
+    color: blue;
+    font-size: 1.8rem;
+}
+h2 {
+    color: green;
+    font-size: 2rem;
+}
+
+h5 {
+    color: black;
+    font-size: 1,5rem;
+}

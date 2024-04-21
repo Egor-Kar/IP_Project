@@ -1,0 +1,73 @@
+<div class="container text-center">
+    <div class="row">
+        <div class="col">
+            <h7>Профиль пользователя</h7>
+        </div>
+    </div>
+</div>
+<div class="container text-center">
+    <div class="row">
+        <div class="col">
+            <h1>Имя пользователя: {{ request.user.username}} </h1>
+        </div>
+    </div>
+    <div class="col">
+        <h1>Ваш рейтинг: {{ request.user.score}} единиц</h1>
+    </div>
+    <div class="row">
+        <div class="col">
+            {%if request.user.is_authenticated %}
+            <h1>Ваше количество игр: {{request.user.count_play}}</h1>
+            {% endif %}
+        </div>
+        <div class="col">
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'statistica' %}"><h3>Посмотреть подробную стастику</h3></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col">
+            {%if request.user.is_authenticated %}
+            <h8>Ваша последняя игра:</h8>
+            {% endif %}
+        </div>
+        <div class="col">
+            {%if request.user.is_authenticated %}
+            <h1>Количество попыток, затраченных на отгадывание: {{request.user.last_hit}}</h1>
+            {% endif %}
+        </div>
+        <div class="col">
+            {%if request.user.is_authenticated %}
+            <h1>Число, загаданное компьютером: {{request.user.last_number}}</h1>
+            {% endif %}
+        </div>
+        <div class="col">
+            {%if request.user.is_authenticated %}
+            {% if request.user.last_score > 0 %}
+                <h1>Изменение рейтинга: +{{request.user.last_score}}</h1>
+            {%else%}
+             <h1>Изменение рейтинга: {{request.user.last_score}}</h1>
+            {%endif%}
+            {% endif %}
+        </div>
+    <div class="col">
+        <h8>Топ рейтинга:</h8>
+        {%if request.user.is_authenticated %}
+        <h1>Ваш топ по рейтингу: {{top_reit}}</h1>
+        {% endif %}
+    </div>
+    <div class="col">
+        {%if request.user.is_authenticated %}
+        <h1>Ваш топ по количеству завершенных игр: {{top_play}}</h1>
+        {% endif %}
+    </div>
+    <div class="col">
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'table' %}"><h3>Посмотреть таблицу рейтинга</h3></a>
+                </li>
+            </ul>
+        </div>
+</div>

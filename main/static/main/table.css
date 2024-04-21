@@ -1,0 +1,37 @@
+body{
+
+    background-image: url(456.jpg)
+
+}
+
+.parent {
+    display: flex;
+    justify-content: space-between;
+}
+
+h1{
+    color: green;
+    font-size: 1.7rem;
+
+}
+
+h2{
+    font-size: 2rem;
+    margin-top: 20%;
+}
+h3{
+    color: blue;
+    font-size: 1.9rem;
+    font-weight: 1000;
+}
+
+thead{
+    color: blue;
+    font-size: 1.5rem;
+}
+
+.table{
+    margin-top: 5%;
+    font-size: 1rem;
+
+}

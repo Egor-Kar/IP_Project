@@ -1,0 +1,44 @@
+<!doctype html>
+{% load static %}
+{% load django_bootstrap5 %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Таблица рейтинга</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'main/table.css' %}">
+
+</head>
+<body>
+<ul class="nav justify-content">
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'profile' %}"><h3>Вернуться в профиль</h3></a>
+    </li>
+</ul>
+<div class="container text-center">
+    <table class="table table-success table-bordered table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Место в рейтинге</th>
+      <th scope="col">Никнейм</th>
+      <th scope="col">Рейтинг</th>
+      <th scope="col">Количество игр</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for x, y, z, q in sssr%}
+    <tr>
+      <th scope="row"><h1>{{q}}</h1></th>
+      <td><h1>{{z}}</h1></td>
+      <td><h1>{{x}}</h1></td>
+      <td><h1>{{y}}</h1></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+</body>
+</html>

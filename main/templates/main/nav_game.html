@@ -1,0 +1,29 @@
+<ul class="nav">
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'home' %}"><h7>Вернуться в меню</h7></a>
+  </li>
+</ul>
+<div class="container text-center">
+  <div class="row">
+    <div class="col">
+      {% if result == "new"%}
+        <h1>Добро пожаловать в игру "Быки и коровы"!</h1>
+        {% endif %}
+        {% if "Поздравляем" not in result%}
+                        <form action="{% url 'data' %}" method="post">
+                            {% csrf_token %}
+                                {% if result != 'new'%}
+                                    <h2> {{ result }} </h2>
+                                {% endif%}
+                            {% if "Поздравляем" not in result and "Ой!" not in result%}
+                                <label for="data"><h7> Введите четырехзначное число:</h7></label>
+                                <input type="number" name="user_guess" min="1000" max="9999" id="number" required />
+                            <button type="submit" class="btn btn-primary">Отправить</button>
+                            {% endif %}
+                        </form>
+        {% else %}
+            <h3>{{result}}</h3>
+        {% endif %}
+    </div>
+</div>
+</div>
