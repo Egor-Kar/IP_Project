@@ -13,10 +13,11 @@ User = get_user_model()
 
 def main(request):
     abcd = 0
-    if not Previous_attempts and not Previous_attempts_1:
-        abcd = 0
-    else:
-        abcd = 1
+    if request.user.is_authenticated:
+        if not request.user.try_1:
+            abcd = 0
+        else:
+            abcd = 1
     return render(request, 'main/layout.html', {'abcd': abcd})
 
 
@@ -95,7 +96,7 @@ def statistika(request):
 def game(request):
     result = 'new'
     return render(request, 'main/game.html',
-                  {'result': result, 'prev': Previous_attempts, 'prev_1': Previous_attempts_1})
+                  {'result': result, })
 
 
 result = ""
@@ -111,7 +112,7 @@ summ_score = 0
 def game_secret(request):
     result = 'new'
     return render(request, 'main/game_secret.html',
-                  {'result': result, 'prev': Previous_attempts, 'prev_1': Previous_attempts_1})
+                  {'result': result,})
 
 
 def data_form_secret(request):
@@ -124,8 +125,6 @@ def data_form_secret(request):
     result = ""
     qwer = ''
     if flag == 0:
-        Previous_attempts = []
-        Previous_attempts_1 = []
         a = set()
         while True:
             secret_number = random.randint(1000, 9999)
@@ -139,6 +138,26 @@ def data_form_secret(request):
     user_guess = int(request.POST['user_guess'])
     user_guess = str(user_guess)
     if user_guess == str(secret_number) and count_hit <= 20:
+        request.user.try_1 = ""
+        request.user.try_2 = ""
+        request.user.try_3 = ""
+        request.user.try_4 = ""
+        request.user.try_5 = ""
+        request.user.try_6 = ""
+        request.user.try_7 = ""
+        request.user.try_8 = ""
+        request.user.try_9 = ""
+        request.user.try_10 = ""
+        request.user.try_11 = ""
+        request.user.try_12 = ""
+        request.user.try_13 = ""
+        request.user.try_14 = ""
+        request.user.try_15 = ""
+        request.user.try_16 = ""
+        request.user.try_17 = ""
+        request.user.try_18 = ""
+        request.user.try_19 = ""
+        request.user.try_20 = ""
         if count_hit <= 11:
             request.user.score = request.user.score + 100 - 10 * (count_hit - 1)
             request.user.last_score = 100 - 10 * (count_hit - 1)
@@ -203,8 +222,6 @@ def data_form_secret(request):
             qwer = f" Ваш рейтинг увеличился на {100 - 10 * (count_hit - 1)} единиц. Теперь он составляет {request.user.score} единиц."
         flag = 0
         count_hit = 0
-        Previous_attempts = []
-        Previous_attempts_1 = []
     else:
         count_hit += 1
         cows = 0
@@ -217,10 +234,47 @@ def data_form_secret(request):
                 cows += 1
         iuy = str(count_hit) + ". " + "Ваше число: " + str(user_guess) + ". Быков найдено " + str(
             bulls) + ", коров найдено " + str(cows) + "."
-        if count_hit % 2 == 0:
-            Previous_attempts.append(iuy)
-        else:
-            Previous_attempts_1.append(iuy)
+        match count_hit:
+            case 1:
+                request.user.try_1 = iuy
+            case 2:
+                request.user.try_2 = iuy
+            case 3:
+                request.user.try_3 = iuy
+            case 4:
+                request.user.try_4 = iuy
+            case 5:
+                request.user.try_5 = iuy
+            case 6:
+                request.user.try_6 = iuy
+            case 7:
+                request.user.try_7 = iuy
+            case 8:
+                request.user.try_8 = iuy
+            case 9:
+                request.user.try_9 = iuy
+            case 10:
+                request.user.try_10 = iuy
+            case 11:
+                request.user.try_11 = iuy
+            case 12:
+                request.user.try_12 = iuy
+            case 13:
+                request.user.try_13 = iuy
+            case 14:
+                request.user.try_14 = iuy
+            case 15:
+                request.user.try_15 = iuy
+            case 16:
+                request.user.try_16 = iuy
+            case 17:
+                request.user.try_17 = iuy
+            case 18:
+                request.user.try_18 = iuy
+            case 19:
+                request.user.try_19 = iuy
+            case 20:
+                request.user.try_20 = iuy
         result = f"К сожалению, это неверное число. Количество оставшихся попыток: {20 - count_hit} {secret_number}"
         secret_number = int(secret_number)
         flag = 1
@@ -232,11 +286,29 @@ def data_form_secret(request):
                 request.user.last_score = -100
                 request.user.score -= 100
             request.user.save()
+            request.user.try_1 = ""
+            request.user.try_2 = ""
+            request.user.try_3 = ""
+            request.user.try_4 = ""
+            request.user.try_5 = ""
+            request.user.try_6 = ""
+            request.user.try_7 = ""
+            request.user.try_8 = ""
+            request.user.try_9 = ""
+            request.user.try_10 = ""
+            request.user.try_11 = ""
+            request.user.try_12 = ""
+            request.user.try_13 = ""
+            request.user.try_14 = ""
+            request.user.try_15 = ""
+            request.user.try_16 = ""
+            request.user.try_17 = ""
+            request.user.try_18 = ""
+            request.user.try_19 = ""
+            request.user.try_20 = ""
             result = "Ой! Вы использовали все попытки. Ничего, получится в следующий раз! Ваш рейтинг уменьшился на 100 единиц."
             request.user.count_play += 1
             request.user.save()
-            Previous_attempts = []
-            Previous_attempts_1 = []
             count_hit = 0
             request.user.hit20 += 1
     request.user.save()
@@ -247,7 +319,7 @@ def data_form_secret(request):
     if result == "Ой! Вы использовали все попытки. Ничего, получится в следующий раз! Ваш рейтинг уменьшился на 100 единиц.":
         reit = -100
     return render(request, 'main/game_secret.html',
-                  {'result': result, 'prev': Previous_attempts, 'prev_1': Previous_attempts_1})
+                  {'result': result,})
 
 
 def data_form(request):
@@ -275,6 +347,26 @@ def data_form(request):
     user_guess = int(request.POST['user_guess'])
     user_guess = str(user_guess)
     if user_guess == str(secret_number) and count_hit <= 20:
+        request.user.try_1 = ""
+        request.user.try_2 = ""
+        request.user.try_3 = ""
+        request.user.try_4 = ""
+        request.user.try_5 = ""
+        request.user.try_6 = ""
+        request.user.try_7 = ""
+        request.user.try_8 = ""
+        request.user.try_9 = ""
+        request.user.try_10 = ""
+        request.user.try_11 = ""
+        request.user.try_12 = ""
+        request.user.try_13 = ""
+        request.user.try_14 = ""
+        request.user.try_15 = ""
+        request.user.try_16 = ""
+        request.user.try_17 = ""
+        request.user.try_18 = ""
+        request.user.try_19 = ""
+        request.user.try_20 = ""
         if count_hit <= 11:
             request.user.score = request.user.score + 100 - 10 * (count_hit - 1)
             request.user.last_score = 100 - 10 * (count_hit - 1)
@@ -354,10 +446,47 @@ def data_form(request):
                 cows += 1
         iuy = str(count_hit) + ". " + "Ваше число: " + str(user_guess) + ". Быков найдено " + str(
             bulls) + ", коров найдено " + str(cows) + "."
-        if count_hit % 2 == 0:
-            Previous_attempts.append(iuy)
-        else:
-            Previous_attempts_1.append(iuy)
+        match count_hit:
+            case 1:
+                request.user.try_1 = iuy
+            case 2:
+                request.user.try_2 = iuy
+            case 3:
+                request.user.try_3 = iuy
+            case 4:
+                request.user.try_4 = iuy
+            case 5:
+                request.user.try_5 = iuy
+            case 6:
+                request.user.try_6 = iuy
+            case 7:
+                request.user.try_7 = iuy
+            case 8:
+                request.user.try_8 = iuy
+            case 9:
+                request.user.try_9 = iuy
+            case 10:
+                request.user.try_10 = iuy
+            case 11:
+                request.user.try_11 = iuy
+            case 12:
+                request.user.try_12 = iuy
+            case 13:
+                request.user.try_13 = iuy
+            case 14:
+                request.user.try_14 = iuy
+            case 15:
+                request.user.try_15 = iuy
+            case 16:
+                request.user.try_16 = iuy
+            case 17:
+                request.user.try_17 = iuy
+            case 18:
+                request.user.try_18 = iuy
+            case 19:
+                request.user.try_19 = iuy
+            case 20:
+                request.user.try_20 = iuy
         result = f"К сожалению, это неверное число. Количество оставшихся попыток: {20 - count_hit}"
         secret_number = int(secret_number)
         flag = 1
@@ -371,6 +500,26 @@ def data_form(request):
             request.user.count_play += 1
             request.user.last_hit = 20
             request.user.save()
+            request.user.try_1 = ""
+            request.user.try_2 = ""
+            request.user.try_3 = ""
+            request.user.try_4 = ""
+            request.user.try_5 = ""
+            request.user.try_6 = ""
+            request.user.try_7 = ""
+            request.user.try_8 = ""
+            request.user.try_9 = ""
+            request.user.try_10 = ""
+            request.user.try_11 = ""
+            request.user.try_12 = ""
+            request.user.try_13 = ""
+            request.user.try_14 = ""
+            request.user.try_15 = ""
+            request.user.try_16 = ""
+            request.user.try_17 = ""
+            request.user.try_18 = ""
+            request.user.try_19 = ""
+            request.user.try_20 = ""
             result = ("Ой! Вы использовали все попытки. Ничего, получится в следующий раз! Ваш рейтинг уменьшился на "
                       "100 единиц.")
             Previous_attempts = []
@@ -386,4 +535,4 @@ def data_form(request):
                   "единиц."):
         reit = -100
     return render(request, 'main/game.html',
-                  {'result': result, 'prev': Previous_attempts, 'prev_1': Previous_attempts_1})
+                  {'result': result,})
