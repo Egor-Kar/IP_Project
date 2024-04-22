@@ -25,11 +25,15 @@ def stat_table(request):
     nikneyms = []
     q = 0
     for i in zxc:
-        q += 1
-        nikneyms.append((i.score, i.count_play, i.username, q))
+        nikneyms.append((i.score, i.count_play, i.username))
     nikneyms = list(sorted(nikneyms, reverse=True))
+    for i in range(len(nikneyms)):
+        nikneyms[i] = list(nikneyms[i])
+        nikneyms[i].append(i + 1)
+        print(nikneyms[i])
+    print(nikneyms)
     if len(nikneyms) < 10:
-        for i in range(len(nikneyms), 11):
+        for i in range(len(nikneyms) + 1, 11):
             nikneyms.append(("-", "-", "-", i))
     return render(request, 'main/stat_table.html', {'sssr': nikneyms})
 

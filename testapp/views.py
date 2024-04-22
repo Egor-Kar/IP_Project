@@ -4,7 +4,6 @@ from .forms import SignUpForm
 from django.contrib import messages
 from .forms import LoginForm
 
-
 User = get_user_model()
 
 
@@ -14,9 +13,7 @@ def registration(request):
         if form.is_valid():
             user = form.save()
             raw_password = form.cleaned_data.get('password1')
-            username = form.cleaned_data.get('username')
-            user = authenticate(request, username=username, password=raw_password)
-            messages.success(request, f'Создан аккаунт {username}!')
+            user = authenticate(username=user.username, password=raw_password)
             login(request, user)
             return redirect('/')
     else:
@@ -29,14 +26,9 @@ def sign_in(request):
         form = LoginForm(request.POST)
 
     if form.is_valid():
-        if '@' in form.cleaned_data['username']:
-            email = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(request, email=email, password=password)
-        else:
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(request, username=username, password=password)
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
             return redirect('')
