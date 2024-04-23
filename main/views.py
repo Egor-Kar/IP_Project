@@ -102,7 +102,6 @@ def game(request):
 result = ""
 flag = 0
 secret_number = 0
-count_hit = 0
 Previous_attempts = []
 Previous_attempts_1 = []
 reit = 0
@@ -117,7 +116,6 @@ def game_secret(request):
 
 def data_form_secret(request):
     global reit
-    global count_hit
     global flag
     global secret_number
     global Previous_attempts
@@ -137,7 +135,7 @@ def data_form_secret(request):
                 a.clear()
     user_guess = int(request.POST['user_guess'])
     user_guess = str(user_guess)
-    if user_guess == str(secret_number) and count_hit <= 20:
+    if user_guess == str(secret_number) and request.user.count_hit <= 20:
         request.user.try_1 = ""
         request.user.try_2 = ""
         request.user.try_3 = ""
@@ -158,25 +156,25 @@ def data_form_secret(request):
         request.user.try_18 = ""
         request.user.try_19 = ""
         request.user.try_20 = ""
-        if count_hit <= 11:
-            request.user.score = request.user.score + 100 - 10 * (count_hit - 1)
-            request.user.last_score = 100 - 10 * (count_hit - 1)
-            result = f"Поздравляем! Вы угадали число. Ваш рейтинг увеличился на {100 - 10 * (count_hit - 1)}"
-        if count_hit > 11:
-            if request.user.score + 100 - 10 * (count_hit - 1) < 0:
+        if request.user.count_hit <= 11:
+            request.user.score = request.user.score + 100 - 10 * (request.user.count_hit - 1)
+            request.user.last_score = 100 - 10 * (request.user.count_hit - 1)
+            result = f"Поздравляем! Вы угадали число. Ваш рейтинг увеличился на {100 - 10 * (request.user.count_hit - 1)}"
+        if request.user.count_hit > 11:
+            if request.user.score + 100 - 10 * (request.user.count_hit - 1) < 0:
                 request.user.last_score = -request.user.score
                 request.user.score = 0
                 result = f"Поздравляем! Вы угадали число, но слишком поздно, поэтому ваш рейтинг упал до нуля."
             else:
-                request.user.score = request.user.score + 100 - 10 * (count_hit - 1)
-                result = f"Поздравляем! Вы угадали число, но слишком поздно, поэтому ваш рейтинг уменьшился на {abs(100 - 10 * (count_hit - 1))}"
-                request.user.last_score = 100 - 10 * (count_hit - 1)
+                request.user.score = request.user.score + 100 - 10 * (request.user.count_hit - 1)
+                result = f"Поздравляем! Вы угадали число, но слишком поздно, поэтому ваш рейтинг уменьшился на {abs(100 - 10 * (request.user.count_hit - 1))}"
+                request.user.last_score = 100 - 10 * (request.user.count_hit - 1)
         request.user.save()
         request.user.count_play += 1
-        request.user.last_hit = count_hit
+        request.user.last_hit = request.user.count_hit
         request.user.last_number = secret_number
         request.user.save()
-        match count_hit:
+        match request.user.count_hit:
             case 1:
                 request.user.hit1 += 1
             case 2:
@@ -216,14 +214,14 @@ def data_form_secret(request):
             case 19:
                 request.user.hit19 += 1
         request.user.save()
-        if 100 - 10 * (count_hit - 1) < 0:
-            qwer = f" К сожалению, ваш рейтинг уменьшился на {abs(100 - 10 * (count_hit - 1))} единиц."
+        if 100 - 10 * (request.user.count_hit - 1) < 0:
+            qwer = f" К сожалению, ваш рейтинг уменьшился на {abs(100 - 10 * (request.user.count_hit - 1))} единиц."
         else:
-            qwer = f" Ваш рейтинг увеличился на {100 - 10 * (count_hit - 1)} единиц. Теперь он составляет {request.user.score} единиц."
+            qwer = f" Ваш рейтинг увеличился на {100 - 10 * (request.user.count_hit - 1)} единиц. Теперь он составляет {request.user.score} единиц."
         flag = 0
-        count_hit = 0
+        request.user.count_hit = 0
     else:
-        count_hit += 1
+        request.user.count_hit += 1
         cows = 0
         bulls = 0
         secret_number = str(secret_number)
@@ -232,9 +230,9 @@ def data_form_secret(request):
                 bulls += 1
             elif user_guess[i] in secret_number:
                 cows += 1
-        iuy = str(count_hit) + ". " + "Ваше число: " + str(user_guess) + ". Быков найдено " + str(
+        iuy = str(request.user.count_hit) + ". " + "Ваше число: " + str(user_guess) + ". Быков найдено " + str(
             bulls) + ", коров найдено " + str(cows) + "."
-        match count_hit:
+        match request.user.count_hit:
             case 1:
                 request.user.try_1 = iuy
             case 2:
@@ -275,10 +273,10 @@ def data_form_secret(request):
                 request.user.try_19 = iuy
             case 20:
                 request.user.try_20 = iuy
-        result = f"К сожалению, это неверное число. Количество оставшихся попыток: {20 - count_hit} {secret_number}"
+        result = f"К сожалению, это неверное число. Количество оставшихся попыток: {20 - request.user.count_hit} {secret_number}"
         secret_number = int(secret_number)
         flag = 1
-        if count_hit > 20:
+        if request.user.count_hit > 20:
             if request.user.score - 100 < 0:
                 request.user.last_score = -request.user.score
                 request.user.score = 0
@@ -309,22 +307,22 @@ def data_form_secret(request):
             result = "Ой! Вы использовали все попытки. Ничего, получится в следующий раз! Ваш рейтинг уменьшился на 100 единиц."
             request.user.count_play += 1
             request.user.save()
-            count_hit = 0
+            request.user.count_hit = 0
             request.user.hit20 += 1
     request.user.save()
-    if request.user.score + 100 - 10 * (count_hit - 1) < 0:
+    if request.user.score + 100 - 10 * (request.user.count_hit - 1) < 0:
         reit = 0
     else:
-        reit = 100 - 10 * (count_hit - 1)
+        reit = 100 - 10 * (request.user.count_hit - 1)
     if result == "Ой! Вы использовали все попытки. Ничего, получится в следующий раз! Ваш рейтинг уменьшился на 100 единиц.":
         reit = -100
+    request.user.save()
     return render(request, 'main/game_secret.html',
                   {'result': result,})
 
 
 def data_form(request):
     global reit
-    global count_hit
     global flag
     global secret_number
     global Previous_attempts
@@ -346,7 +344,7 @@ def data_form(request):
                 a.clear()
     user_guess = int(request.POST['user_guess'])
     user_guess = str(user_guess)
-    if user_guess == str(secret_number) and count_hit <= 20:
+    if user_guess == str(secret_number) and request.user.count_hit <= 20:
         request.user.try_1 = ""
         request.user.try_2 = ""
         request.user.try_3 = ""
@@ -367,25 +365,25 @@ def data_form(request):
         request.user.try_18 = ""
         request.user.try_19 = ""
         request.user.try_20 = ""
-        if count_hit <= 11:
-            request.user.score = request.user.score + 100 - 10 * (count_hit - 1)
-            request.user.last_score = 100 - 10 * (count_hit - 1)
-            result = f"Поздравляем! Вы угадали число. Ваш рейтинг увеличился на {100 - 10 * (count_hit - 1)}"
-        if count_hit > 11:
-            if request.user.score + 100 - 10 * (count_hit - 1) < 0:
+        if request.user.count_hit <= 11:
+            request.user.score = request.user.score + 100 - 10 * (request.user.count_hit - 1)
+            request.user.last_score = 100 - 10 * (request.user.count_hit - 1)
+            result = f"Поздравляем! Вы угадали число. Ваш рейтинг увеличился на {100 - 10 * (request.user.count_hit - 1)}"
+        if request.user.count_hit > 11:
+            if request.user.score + 100 - 10 * (request.user.count_hit - 1) < 0:
                 request.user.last_score = -request.user.score
                 request.user.score = 0
                 result = f"Поздравляем! Вы угадали число, но слишком поздно, поэтому ваш рейтинг упал до нуля."
             else:
-                request.user.score = request.user.score + 100 - 10 * (count_hit - 1)
-                result = f"Поздравляем! Вы угадали число, но слишком поздно, поэтому ваш рейтинг уменьшился на {abs(100 - 10 * (count_hit - 1))}"
-                request.user.last_score = 100 - 10 * (count_hit - 1)
+                request.user.score = request.user.score + 100 - 10 * (request.user.count_hit - 1)
+                result = f"Поздравляем! Вы угадали число, но слишком поздно, поэтому ваш рейтинг уменьшился на {abs(100 - 10 * (request.user.count_hit - 1))}"
+                request.user.last_score = 100 - 10 * (request.user.count_hit - 1)
         request.user.save()
-        request.user.last_hit = count_hit
+        request.user.last_hit = request.user.count_hit
         request.user.last_number = secret_number
         request.user.count_play += 1
         request.user.save()
-        match (count_hit):
+        match (request.user.count_hit):
             case 1:
                 request.user.hit1 += 1
             case 2:
@@ -425,28 +423,29 @@ def data_form(request):
             case 19:
                 request.user.hit19 += 1
         request.user.save()
-        if 100 - 10 * (count_hit - 1) < 0:
-            qwer = f" К сожалению, ваш рейтинг уменьшился на {abs(100 - 10 * (count_hit - 1))} единиц."
+        if 100 - 10 * (request.user.count_hit - 1) < 0:
+            qwer = f" К сожалению, ваш рейтинг уменьшился на {abs(100 - 10 * (request.user.count_hit - 1))} единиц."
         else:
-            qwer = f" Ваш рейтинг увеличился на {100 - 10 * (count_hit - 1)} единиц. Теперь он составляет {request.user.score} единиц."
+            qwer = f" Ваш рейтинг увеличился на {100 - 10 * (request.user.count_hit - 1)} единиц. Теперь он составляет {request.user.score} единиц."
         flag = 0
-        count_hit = 0
+        request.user.count_hit = 0
 
         Previous_attempts = []
         Previous_attempts_1 = []
     else:
-        count_hit += 1
+        request.user.count_hit += 1
         cows = 0
         bulls = 0
+        request.user.save()
         secret_number = str(secret_number)
         for i in range(len(user_guess)):
             if user_guess[i] == secret_number[i]:
                 bulls += 1
             elif user_guess[i] in secret_number:
                 cows += 1
-        iuy = str(count_hit) + ". " + "Ваше число: " + str(user_guess) + ". Быков найдено " + str(
+        iuy = str(request.user.count_hit) + ". " + "Ваше число: " + str(user_guess) + ". Быков найдено " + str(
             bulls) + ", коров найдено " + str(cows) + "."
-        match count_hit:
+        match request.user.count_hit:
             case 1:
                 request.user.try_1 = iuy
             case 2:
@@ -487,10 +486,10 @@ def data_form(request):
                 request.user.try_19 = iuy
             case 20:
                 request.user.try_20 = iuy
-        result = f"К сожалению, это неверное число. Количество оставшихся попыток: {20 - count_hit}"
+        result = f"К сожалению, это неверное число. Количество оставшихся попыток: {20 - request.user.count_hit}"
         secret_number = int(secret_number)
         flag = 1
-        if count_hit > 20:
+        if request.user.count_hit > 20:
             if request.user.score - 100 < 0:
                 request.user.last_score = -request.user.score
                 request.user.score = 0
@@ -524,15 +523,16 @@ def data_form(request):
                       "100 единиц.")
             Previous_attempts = []
             Previous_attempts_1 = []
-            count_hit = 0
+            request.user.count_hit = 0
             request.user.hit20 += 1
     request.user.save()
-    if request.user.score + 100 - 10 * (count_hit - 1) < 0:
+    if request.user.score + 100 - 10 * (request.user.count_hit - 1) < 0:
         reit = 0
     else:
-        reit = 100 - 10 * (count_hit - 1)
+        reit = 100 - 10 * (request.user.count_hit - 1)
     if result == ("Ой! Вы использовали все попытки. Ничего, получится в следующий раз! Ваш рейтинг уменьшился на 100 "
                   "единиц."):
         reit = -100
+    request.user.save()
     return render(request, 'main/game.html',
                   {'result': result,})
